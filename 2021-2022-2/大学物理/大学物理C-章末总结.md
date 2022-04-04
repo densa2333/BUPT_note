@@ -137,23 +137,107 @@ $$
 
 ##### 电偶极子
 
+电偶极子是一对靠得很近的等量异号点电荷，它是个相对的概念，也是一种实际的物理模型。
 
+当 $r >> l$ 时，电偶极子
 
+- 轴线延长线上的场强：
 
+$$
+\vec E = \cfrac {\vec p}{2\pi \varepsilon_0 r^3}
+$$
+
+- 中垂面上的场强；
+
+$$
+\vec E = - \cfrac {\vec p}{4\pi \varepsilon_0 r^3}
+$$
 
 **3. 连续带电体**
+$$
+\begin{gather}
+d\vec E = \cfrac{\vec r dq}{4\pi \varepsilon_0 r^3} \\
+dq = 
+\begin{cases}
+\lambda dl \\
+\sigma dS \\
+\rho dV \\
+\end{cases} \\
+\vec E = \int d\vec E
+\end{gather}
+$$
+
 
 
 
 ##### 均匀带电细棒
 
+$$
+d \vec E = \cfrac{dq}{4\pi \varepsilon_0 r^3} \vec r \\
+
+dq = \lambda dx \ \ \ \  \lambda = \cfrac qL \\ \\
+dE = \cfrac{\lambda dx}{4\pi \varepsilon_0 r^2} \\
+dE_x = dE\cos \theta \ \ \ \  dE_y = dE\sin \theta \\
+E_x = \int dE_x = \int \cfrac{\lambda dx}{4\pi \varepsilon_0 r^2} \cos \theta \\
+E_y = \int dE_y = \int \cfrac{\lambda dx}{4\pi \varepsilon_0 r^2} \sin \theta \\ \\
+统一积分变量：\\
+x = - y \cot \theta \\
+dx = y \csc ^2\theta d\theta \\
+r^2 = y^2 + x ^2 = y^2 \csc^2 \theta \\ \\
+E_x = \int_{\theta_1}^{\theta_2} \cfrac{\lambda}{4\pi \varepsilon_0 y} \cos \theta d\theta = \cfrac{\lambda}{4\pi \varepsilon_0 y} (\sin \theta_2 - \sin \theta_1) \\
+E_y = \int_{\theta_1}^{\theta_2} \cfrac{\lambda}{4\pi \varepsilon_0 y} \sin \theta d\theta = \cfrac{\lambda}{4\pi \varepsilon_0 y} (\cos \theta_1 - \cos \theta_2) \\
+$$
+
+- 无限长带电直线场强公式：
+
+$$
+E = \cfrac {\lambda}{2\pi \varepsilon_0 y}
+$$
+
+- 离细杆无穷远可看作点电荷：
+
+$$
+E = \cfrac q{4\pi \varepsilon_0 y^2}
+$$
+
 
 
 ##### 均匀带电细圆环
 
+$$
+d \vec E = \cfrac{dq}{4\pi \varepsilon_0 r^3} \vec r \\
+dq = \lambda dl = \cfrac q{2\pi R} dl \\
+E = E_x = \int \cfrac {dq}{4\pi \varepsilon_0 r^2} \cos \theta = \cfrac 1{4\pi \varepsilon_0 r^2} \cfrac {qdl}{2\pi R} \cfrac xr \\
+= \cfrac {qx}{4\pi \varepsilon_0 r^3} \cfrac1{2\pi R}\int_0^{x\pi R}dl = \cfrac{qx}{4\pi \varepsilon_0 (x^2 + R^2)^{\frac32}}
+$$
+
+- 环心处
+
+$$
+E = 0
+$$
+
+- 无穷远处
+
+$$
+E \approx \cfrac q{4\pi \varepsilon_0 x^2}
+$$
+
 
 
 ##### 均匀带电圆盘
+
+- 无限大均匀带电平面
+
+$$
+E = \cfrac{\sigma}{2\varepsilon_0}
+$$
+
+- 无穷远处
+
+$$
+E = \cfrac q{4\pi \varepsilon_0 x^2}
+$$
 
 
 
@@ -171,10 +255,16 @@ $$
 性质：
 
 - 电场线起始于正电荷（或无限远处）
+- 在没有点电荷的空间，任何两条电力线不会相交
+- 电场线不会形成闭合曲线
 
 
 
 #### 电通量
+
+$$
+\Phi_e = \vec E \cdot \vec S
+$$
 
 
 
@@ -196,33 +286,80 @@ $$
 
 **1. 定性分析一些问题**
 
-
+例如分析电场线性质
 
 **2. 由 $\vec E$ 的分部求空间电荷分布**
 
-
-
 **3. 求解某些对称分布的电场**
+
+- 成立条件：静电场
+- 求解条件：电场分布具有某些对称性
+
+找高斯面
 
 ##### 均匀带电球体（面）
 
+$$
+\Phi_e = E \cdot 4\pi r^2 = \cfrac 1{\varepsilon_0}\sum q^{\rm in}
+$$
 
+- 球体外部：
+
+$$
+E_外 = \cfrac q{4\pi \varepsilon_0 r^2}
+$$
+
+- 球体内部：
+
+$$
+E_内 = \cfrac {qr}{4\pi \epsilon_0 R^3}
+$$
 
 
 
 ##### 无限长均匀带电直线
 
+$$
+\Phi_e = E \cdot 2\pi rh = \cfrac 1{\varepsilon_0} \lambda h
+$$
 
+- 无限长均匀带电直线：
+
+$$
+E = \cfrac {\lambda}{2\pi \varepsilon_0 r}
+$$
 
 
 
 ##### 无限大均匀带电平面
+
+$$
+\Phi_e = 2ES = \cfrac 1{\varepsilon_0} \sigma S
+$$
+
+- 无限大均匀带电平面；
+
+$$
+E = \cfrac{\sigma}{2\varepsilon_0}
+$$
 
 
 
 
 
 ##### 无限长均匀带电圆柱体（面）
+
+- 柱内：
+
+$$
+E = 0
+$$
+
+- 柱外：
+
+$$
+E = \cfrac {\lambda}{2\pi \varepsilon_0 r}
+$$
 
 
 
