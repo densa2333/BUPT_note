@@ -274,7 +274,7 @@ char *fgets(char *s, int n, FILE *stream);
 
 ​     
 
-**EXAMPLE 3**
+**EXAMPLE 1**
 
 设计函数，将键盘上输入的若干字符串（以 Ctrl+Z 作为结束字符），存储到指定文本文件中。
 
@@ -299,7 +299,7 @@ void writeFileFromKeyboard(char * filename)
 
 
 
-**EXAMPLE 4**
+**EXAMPLE 2**
 
 设计函数：将一个文本文件逐行复制到另一文本文件中。
 
@@ -580,17 +580,204 @@ int main()
 
 ## 6. 顺序文件的操作
 
+#### 顺序存取文件特点
 
+- 是文本文件，使用`fscanf()`和`fprintf()`
+- 文件中的记录可以有不同的长度
+- 不能直接快速地访问文件中的某一记录，而必须从文件的第一个记录开始访问
+- 新的纪录只能插入到文件尾
 
+#### EXAMPLE
 
+设计函数，将键盘上输入若干记录（以 Ctrl+Z 结束），存储到指定顺序文件中。
+
+```C
+void writeFileFromKeyboard(char *filename)
+{
+    int account;
+    char name[30];
+    float balance;
+    FILE *fp = NULL;
+    if ((fp = fopen(filenamem, "w")) != NULL) {
+        scanf("%d%s%f", &account, namen &balance);
+        while (!feof(stdin)) {
+            fprintf(fp, "%5d%13s%10.2f\n", account, name, balance);
+            scanf("%d%s%f", &account, namen &balance);
+        }
+        fclose(fp);
+    }
+    return 0;
+}
+```
+
+设计函数，将一顺序文件逐记录复制到另一顺序文件中。
+
+```C
+void copyFile(char *sourceFileName, char *destFileName)
+{
+    int account;
+    char name[30];
+    float balance;
+    FILE *sourcefp, *destfp;
+    if ((sourcefp = fopen(sourceFileName, "r")) == NULL)
+        printf("Can't open the source file\n");
+    else if ((destfp = fopen(destFileName, "w")) == NULL)
+        printf("Can't open the dest file\n");
+    else {
+        fscanf(sourcefp, "%d%s%f", &account, name. &balance);
+        while (!feof(sourcefp)) {
+            fprintf(destfp, "%5d%13s%10.2f\n", account, name, balance);
+            fscanf(sourcefp, "%d%s%f", &account, name. &balance);
+        }
+        fclose(sourcefp);
+        fclose(destfp);
+    }
+}
+```
 
 
 
 ## 7. 随机文件的操作
 
+#### 随机存取文件特点
+
+- 是二进制文件，使用`fread()`和`fwrite()`
+- 文件中的记录具有相同的长度
+- 能够直接快速地定位、访问文件中的某一记录
+- 新纪录可以插入到希望的位置
+- 为了能在文件中不同的位置随机写入记录，必须对文件先初始化
+
+#### EXAMPLE
+
+按顺序建立一个随机存取文件（文件初始化）    
+
+> 为何要建立一个空文件：    
+>
+> 建立一个文件，并且将位置指针定位到第40条记录处，然后进行写入；然后定位到第80条记录处，然后进行写入，这样是可以的。但问题是：    
+>
+> 如果不往文件中写入空记录，假设往文件中写了第40条记录，以及第80条记录，那么在读取文件中，只能采用`feof()`来判断文件结束，而且只能逐条读取记录，并判断读取的记录是否有效。但是如何判断读取的记录是无效记录？势必要和记录中字段值挂钩。所以需要先对文件进行初始化，写入空记录。
+
+```C
+#include <stdio.h>
+struct clientData
+{
+    int acctNum;
+    char lastName[15];
+    char firstName[10];
+    float balance;  
+};
+int main()
+{
+	int i;
+    struct clientData blankClient = {0, "", "", 0.0}
+    FILE *cfp;
+    if ((cfp = fopen("client.dat", "wb")) == NULL)
+        printf("File could not be opened\n");
+    else {
+        for (i = 1; i <= 100; i++)
+            fwrite(&blankClient, sizeof(struct clientData), 1, cfp);
+        fclose(cfp);
+    }
+    return 0;
+}
+```
+
+把数据随机地写入随机存取文件
+
+```C
+int main()
+{
+    struct clientData client;
+    FILE *cfp;
+    if ((cfp = fopen("client.dat", "rb+")) != NULL)
+        printf("Can't open the file\n");
+    else {
+        printf("Enter account number(1 to 100, 0 to end input)\n");
+        scanf("%d", &client.acctNum);
+        while (client.acctNum != 0) {
+            printf("Enter lastname, firstname, balance\n");
+            scanf("%s%s%f", client.lastName, client.firstName, &client.balance);
+            //fseek() location
+            fseek(cfp, (client.acctNum - 1) * sizeof(struct clientData), SEEK_SET);
+            fwrite(&client, sizeof(struct clientData), 1, cfp);
+            printf("Enter account number(1 to 100, 0 to end input)\n");
+        	scanf("%d", &client.acctNum);
+        }
+        fclose(cfp);
+    }
+    return 0;
+}
+```
+
+按顺序读取一个随机存取文件
+
+```C
+int main()
+{
+    struct clientData client;
+    FILE *cfp;
+    if ((cfp = fopen("client.dat", "rb")) != NULL)
+        printf("Can't open the file\n");
+    else {
+        printf("%-6s%-16s%-11s%10s\n", "Acct", "LastName", "FirstName", "Balance");
+        fread(&client, sizeof(struct clientData), 1, cfp);
+        while (!feof(cfp)) {
+            if (client.acctNum != 0)
+                printf("%-6d%-16s%-11s%10.2f\n", client.acctNum, client.lastName, client.firstName, client.balance);
+            fread(&client, sizeof(struct clientData), 1, cfp);
+        }
+        fclose(cfp);
+    }
+    return 0;
+}
+```
+
+从随机文件中一次性读取多条记录到数组中
+
+```C
+int main()
+{
+    struct clientData client[3];
+    FILE *cfp;
+    if ((cfp = fopen("client.dat", "rb")) == NULL)
+        printf("Can't open the file\n");
+    else {
+        //read 3 blocks from the file
+        fread(clients, sizeof(struct clientData), 3, cfp);
+        fclose(cfp);
+    }
+    ...
+}
+```
+
+将数组内容一次性写入随机文件中
+
+```C
+int main()
+{
+    struct clientData client[3];
+    FILE * cfp;
+    if ((cfp = fopen("client.dat", "wb")) == NULL)
+        printf("Can't opent the file\n");
+    else {
+        ...//set the value of array elements
+        fwrite(client, sizeof(struct clientData), 3. cfp); //write 3 blocks into the file
+        fclose(cfp);
+    }
+    ...
+}
+```
 
 
 
+#### 可能会发生的问题
 
+- 文件路径：`fopen("C:/newdir/file.dat", "r");`
 
+- 二进制文件打开方式不要忘记`b`，如`"rb"``"wb"`
 
+- 在读写`"+"`模式下，读写操作之前必须先用`fseek()`来定位文件位置指针
+
+  > 读操作、**每一次**写操作之前必须要用`fseek()`来定位文件位置指针。如：读完了第 2 条记录，接下去要写第 3 条记录时，也必须先将文件位置指针定位到第 3 条记录开始处，再写第三条记录，否则会出现问题！
+
+- 不能用`fprintf()`向二进制文件写记录
